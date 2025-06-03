@@ -1,42 +1,20 @@
-﻿using Model;
+﻿using System.Collections;
 
-namespace ModelTests;
+namespace Model;
 
-[TestClass]
-public class LimitedQueueTests
+public class LimitedQueue<T> : Queue<T>
 {
-    [TestMethod]
-    public void EnqueueInsertsItmToQueue()
+    private readonly int _maxItems;
+    public LimitedQueue(int maxItems)
     {
-        var queue = new LimitedQueue<int>(3);
-
-        Assert.AreEqual(0, queue.Count);
-
-        queue.Enqueue(1);
-
-        Assert.AreEqual(1, queue.Count);
-
-        queue.Enqueue(3);
-
-        Assert.AreEqual(2, queue.Count);
+        _maxItems = maxItems;
     }
-
-    [TestMethod]
-    public void QueueRemovesExtraItemsAfterItIsFilled()
+    public new void Enqueue(T item)
     {
-        var queue = new LimitedQueue<int>(3);
-        queue.Enqueue(1);
-        queue.Enqueue(2);
-        queue.Enqueue(3);
-
-        Assert.AreEqual(3, queue.Count);
-
-        queue.Enqueue(4);
-        Assert.AreEqual(3, queue.Count);
-        Assert.IsFalse(queue.Contains(1));
-
-        queue.Enqueue(5);
-        Assert.AreEqual(3, queue.Count);
-        Assert.IsFalse(queue.Contains(2));
+        while (Count >= _maxItems)
+        {
+            Dequeue();
+        }
+        base.Enqueue(item);
     }
 }
