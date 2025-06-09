@@ -1,4 +1,5 @@
 ﻿using Model;
+
 namespace ModelTests;
 
 [TestClass]
